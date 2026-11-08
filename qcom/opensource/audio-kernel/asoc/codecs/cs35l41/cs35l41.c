@@ -817,15 +817,8 @@ static int cs35l41_fast_switch_file_put(struct snd_kcontrol *kcontrol,
 
 #if defined(FAST_SWITCH_WORKAROUND)
 	if ((i != cs35l41->fast_switch_file_idx) && cs35l41->fast_switch_en) {
-		int ret;
 		cs35l41->fast_switch_file_idx = i;
-		if (!cs35l41->dsp.running) {
-			dev_info(cs35l41->dev, "%s: next work thread\n", __func__);
-			queue_work(system_highpri_wq, &cs35l41->dsp.delta_work);
-		} else {
-			ret = cs35l41_do_fast_switch(cs35l41);
-			dev_dbg(cs35l41->dev, "%s: fast switch %s\n", __func__, ret ? "fail" : "success");
-		}
+		queue_work(system_highpri_wq, &cs35l41->dsp.delta_work);
 	}
 #endif
 
