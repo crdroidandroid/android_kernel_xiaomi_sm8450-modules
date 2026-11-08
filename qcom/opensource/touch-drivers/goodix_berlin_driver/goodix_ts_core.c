@@ -977,8 +977,10 @@ int goodix_check_ts_id_gpio(struct device *dev)
 		return 0;
 
 	ret = devm_gpio_request_one(dev, gpio, GPIOF_IN, "LCD_ID_DET1");
-	if (gpio < 0)
-		return -EINVAL;
+    if (ret) {
+        ts_err("Failed to request TS ID GPIO %d: %d\n", gpio, ret);
+        return ret;
+    }
 
 	gpio_value = gpio_get_value(gpio);
 
